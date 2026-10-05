@@ -40,9 +40,21 @@
     <div class="calc__intro">
       <h2>Calculadora de consumo</h2>
       <p>Preencha o que se aplica à sua rotina. Deixe em branco o que não usa — vamos considerar como zero.</p>
+      <p class="calc__aviso">A estimativa cobre banho, torneira, descarga, roupa, carro e jardim. Cozinha, água para beber e limpeza da casa não estão incluídas.</p>
     </div>
 
     <form id="formCalculadora" class="calc__grid">
+
+      <fieldset class="calc-card calc-card--moradores">
+        <legend>Composição da casa</legend>
+        <div class="field">
+          <label for="moradores">Quantas pessoas moram aqui?</label>
+          <div class="field__input">
+            <input type="number" id="moradores" min="1" step="1" placeholder="1" inputmode="numeric" required>
+            <span class="field__unit">pessoas</span>
+          </div>
+        </div>
+      </fieldset>
 
       <fieldset class="calc-card calc-card--banho">
         <legend><span class="calc-card__icon">🚿</span> Banho</legend>
@@ -133,12 +145,14 @@
     <div class="resultado__headline">
       <div>
         <p class="resultado__eyebrow">Seu resultado</p>
-        <p class="resultado__numero"><span id="consumoDiario">0</span><span class="resultado__unidade">litros / dia</span></p>
+          <p class="resultado__numero"><span id="consumoDiario">0</span><span class="resultado__unidade">litros / dia · casa</span></p>
       </div>
       <div class="resultado__badge" id="classificacaoBadge">
         <span id="classificacaoTexto">—</span>
       </div>
     </div>
+
+    <p class="resultado__criterio">Classificação por pessoa: consciente até 150 L/dia, moderado até 250 L/dia e elevado acima disso.</p>
 
     <div class="resultado__secundarios">
       <div class="stat-mini">
@@ -150,10 +164,16 @@
         <span class="stat-mini__label">custo estimado / mês*</span>
       </div>
       <div class="stat-mini">
+        <span class="stat-mini__valor" id="consumoPorPessoa">—</span>
+        <span class="stat-mini__label">consumo estimado por pessoa / dia</span>
+      </div>
+      <div class="stat-mini">
         <span class="stat-mini__valor" id="comparativoMedia">—</span>
-        <span class="stat-mini__label">vs. média nacional</span>
+        <span class="stat-mini__label">vs. média nacional de 151 L por pessoa / dia</span>
       </div>
     </div>
+
+    <p class="resultado__aviso">Estimativa parcial: considera apenas os seis usos informados na calculadora. O consumo real da casa pode ser maior.</p>
 
     <div class="resultado__breakdown">
       <h3>De onde vem o seu consumo</h3>
