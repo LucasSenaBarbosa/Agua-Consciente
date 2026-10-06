@@ -54,6 +54,7 @@ function formatarMoeda(valor) {
 // Cálculo principal
 // ---------------------------------------------
 function calcularConsumo() {
+  const moradores = valorCampo('moradores');
   const tempoBanho = valorCampo('tempoBanho');
   const banhos = valorCampo('banhos');
   const torneira = valorCampo('torneira');
@@ -61,6 +62,12 @@ function calcularConsumo() {
   const roupaSemana = valorCampo('roupa');
   const carroMes = valorCampo('carro');
   const jardim = valorCampo('jardim');
+
+  if (!Number.isInteger(moradores) || moradores < 1) {
+    alert('Informe quantas pessoas moram na casa para comparar o consumo por pessoa.');
+    document.getElementById('moradores').focus();
+    return;
+  }
 
   const camposPreenchidos = [tempoBanho, banhos, torneira, descargas, roupaSemana, carroMes, jardim]
     .some((v) => v > 0);
@@ -87,16 +94,17 @@ function calcularConsumo() {
   ].filter((c) => c.valor > 0);
 
   const consumoTotal = categorias.reduce((soma, c) => soma + c.valor, 0);
+  const consumoPorPessoa = consumoTotal / moradores;
   const consumoMensal = consumoTotal * 30;
   const custoMensal = (consumoMensal / 1000) * TARIFA_M3;
 
-  renderizarResultado(consumoTotal, consumoMensal, custoMensal, categorias);
+  renderizarResultado(consumoTotal, consumoMensal, custoMensal, categorias, consumoPorPessoa);
 }
 
 // ---------------------------------------------
 // Renderização
 // ---------------------------------------------
-function renderizarResultado(consumoTotal, consumoMensal, custoMensal, categorias) {
+function renderizarResultado(consumoTotal, consumoMensal, custoMensal, categorias, consumoPorPessoa) {
   const secao = document.getElementById('resultado');
   secao.hidden = false;
 
@@ -104,14 +112,16 @@ function renderizarResultado(consumoTotal, consumoMensal, custoMensal, categoria
   document.getElementById('consumoMensal').textContent = formatarLitros(consumoMensal);
   document.getElementById('custoMensal').textContent = formatarMoeda(custoMensal);
 
-  const diferenca = consumoTotal - MEDIA_NACIONAL_DIA;
+  document.getElementById('consumoPorPessoa').textContent = `${Math.round(consumoPorPessoa).toLocaleString('pt-BR')} L`;
+
+  const diferenca = consumoPorPessoa - MEDIA_NACIONAL_DIA;
   const comparativoEl = document.getElementById('comparativoMedia');
   if (Math.abs(diferenca) < 5) {
-    comparativoEl.textContent = 'Igual à média';
+    comparativoEl.textContent = 'Próximo à média';
   } else if (diferenca > 0) {
-    comparativoEl.textContent = `+${Math.round(diferenca)} L acima`;
+    comparativoEl.textContent = `+${Math.round(diferenca)} L/pessoa acima`;
   } else {
-    comparativoEl.textContent = `${Math.round(diferenca)} L abaixo`;
+    comparativoEl.textContent = `${Math.abs(Math.round(diferenca))} L/pessoa abaixo`;
   }
 
   // Classificação
@@ -119,10 +129,10 @@ function renderizarResultado(consumoTotal, consumoMensal, custoMensal, categoria
   const texto = document.getElementById('classificacaoTexto');
   let classe, rotulo;
 
-  if (consumoTotal <= 150) {
+  if (consumoPorPessoa <= 150) {
     classe = 'baixo';
     rotulo = '🟢 Consumo consciente';
-  } else if (consumoTotal <= 250) {
+  } else if (consumoPorPessoa <= 250) {
     classe = 'moderado';
     rotulo = '🟡 Consumo moderado';
   } else {
@@ -208,11 +218,12 @@ function copiarResultado() {
   const diario = document.getElementById('consumoDiario').textContent;
   const mensal = document.getElementById('consumoMensal').textContent;
   const custo = document.getElementById('custoMensal').textContent;
+  const porPessoa = document.getElementById('consumoPorPessoa').textContent;
   const classificacao = document.getElementById('classificacaoTexto').textContent;
 
   const texto =
-    `Meu consumo de água estimado: ${diario} L/dia (${mensal}/mês, ${custo}/mês). ` +
-    `Classificação: ${classificacao}. Calculado em ÁguaConsciente.`;
+    `Estimativa parcial de água: ${diario} L/dia na casa (${porPessoa} por pessoa/dia; ${mensal}/mês, ${custo}/mês). ` +
+    `Classificação por pessoa: ${classificacao}. Calculado em ÁguaConsciente.`;
 
   if (navigator.clipboard) {
     navigator.clipboard.writeText(texto).then(() => {

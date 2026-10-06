@@ -162,6 +162,13 @@ main {
 
 .calc__intro p { color: var(--ink-soft); font-size: 15.5px; }
 
+.calc__intro .calc__aviso {
+  margin-top: 12px;
+  padding-left: 12px;
+  border-left: 3px solid var(--amber);
+  font-size: 14px;
+}
+
 .calc__grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -177,6 +184,7 @@ main {
 }
 
 .calc-card--torneira { border-left-color: var(--amber); }
+.calc-card--moradores { border-left-color: var(--deep); }
 .calc-card--descarga { border-left-color: var(--deep); }
 .calc-card--roupa    { border-left-color: var(--coral); }
 .calc-card--carro    { border-left-color: #6C7A89; }
@@ -316,6 +324,21 @@ main {
   margin-left: 8px;
 }
 
+.resultado__criterio,
+.resultado__aviso {
+  color: var(--ink-soft);
+  font-size: 13px;
+}
+
+.resultado__criterio { margin-top: 14px; }
+
+.resultado__aviso {
+  margin-top: 24px;
+  padding: 12px 14px;
+  border-left: 3px solid var(--amber);
+  background: #FFF8EC;
+}
+
 .resultado__badge {
   font-weight: 600;
   font-size: 14.5px;
@@ -330,7 +353,7 @@ main {
 
 .resultado__secundarios {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 20px;
   padding: 24px 0;
   border-bottom: 1px solid var(--line);
@@ -458,13 +481,14 @@ footer {
 @media (max-width: 860px) {
   .hero__inner { grid-template-columns: 1fr; }
   .calc__grid { grid-template-columns: repeat(2, 1fr); }
-  .resultado__secundarios { grid-template-columns: 1fr; }
+  .resultado__secundarios { grid-template-columns: repeat(2, 1fr); }
   .guia__grid { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 560px) {
   .hero { padding: 56px 18px 80px; }
   .calc__grid { grid-template-columns: 1fr; }
+  .resultado__secundarios { grid-template-columns: 1fr; }
   .resultado { padding: 26px 20px; }
   .resultado__numero { font-size: 36px; }
 }
